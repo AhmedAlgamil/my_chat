@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_chat/modules/auth/presentation/screens/signup_screen.dart';
 
-import '../../data/cubit/auth_states.dart';
-import '../../data/cubit/cubit.dart';
+import '../../../home_page/presentation/screens/home_page_screen.dart';
+import '../store/auth_cubit.dart';
+import '../store/auth_states.dart';
 import '../components/custom_button.dart';
 import '../components/custom_text_form_field.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
+
+  TextEditingController phoneController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +23,26 @@ class LoginScreen extends StatelessWidget {
         return AuthCubit();
       },
       child: BlocConsumer<AuthCubit, AuthStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is LoginLoadedSuccessState) {
+            if (AuthCubit.get(context).authModel!.status == "true") {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePageScreen(),
+                  ),
+                      (route) => false);
+            }
+            else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: thData.errorColor,
+                  content: Text(AuthCubit.get(context).authModel!.message!),
+                ),
+              );
+            }
+          }
+        },
         builder: (context, state) {
           AuthCubit cubit = AuthCubit.get(context);
           return Scaffold(
@@ -41,18 +64,17 @@ class LoginScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       hintText: "Phone Number",
-                      isAlignCenter: true,
-                      myPrefixIcon: Icons.phone,
                       myKeyboardType: TextInputType.number,
-                      isObSecure: cubit.passwordIsShowen,
+                      myController: phoneController,
+                      errorText: cubit.errorPhoneValidator,
                     ),
                     SizedBox(
                       height: mq.size.height * 0.07,
                     ),
                     CustomTextFormField(
                       hintText: "Password",
-                      isAlignCenter: true,
-                      myPrefixIcon: Icons.lock,
+                      myController: passwordController,
+                      errorText: cubit.errorPasswordValidator,
                       myKeyboardType: TextInputType.visiblePassword,
                       onPressedSuffixIcon: () {
                         if (cubit.passwordIsShowen) {
@@ -70,10 +92,15 @@ class LoginScreen extends StatelessWidget {
                       width: mq.size.width * 0.6,
                       height: mq.size.height * 0.06,
                       buttonText: "Login",
-                      onPressedButton: () {},
+                      onPressedButton: () {
+                        cubit.makeLogin(
+                          phoneController.text,
+                          passwordController.text,
+                        );
+                      },
                     ),
                     SizedBox(
-                      height: mq.size.height * 0.07,
+                      height: mq.size.height * 0.04,
                     ),
                     GestureDetector(
                       child: Text(
@@ -83,7 +110,7 @@ class LoginScreen extends StatelessWidget {
                       onTap: () {},
                     ),
                     SizedBox(
-                      height: mq.size.height * 0.1,
+                      height: mq.size.height * 0.06,
                     ),
                     GestureDetector(
                       child: Text(

@@ -11,7 +11,7 @@ class CustomTextFormField extends StatelessWidget {
     this.myKeyboardType,
     this.textFieldIcon,
     this.isAlignCenter = false,
-    this.isObSecure = false,
+    this.isObSecure = true,
   }) : super(key: key);
 
   String? hintText;
@@ -22,48 +22,62 @@ class CustomTextFormField extends StatelessWidget {
   IconData? myPrefixIcon;
   IconData? textFieldIcon;
   TextInputType? myKeyboardType;
-  TextStyle myTextStyle = const TextStyle(color: Colors.white, fontSize: 17);
+  TextStyle? myTextStyle;
   TextEditingController? myController;
 
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    return TextFormField(
-      controller: myController,
-      keyboardType: myKeyboardType,
-      textAlign: isAlignCenter ? TextAlign.center : TextAlign.start,
-      cursorColor: themeData.accentColor,
-      style: myTextStyle,
-      obscureText: myKeyboardType != TextInputType.visiblePassword ? false : isObSecure,
-      decoration: InputDecoration(
-        icon: textFieldIcon == null ? null : Icon(textFieldIcon),
-        iconColor: themeData.accentColor,
-        hintText: hintText,
-        suffixIconColor: themeData.accentColor,
-        prefixIcon: textFieldIcon != null ? null : ( myPrefixIcon == null ? null : Icon(myPrefixIcon)),
-        errorText: errorText,
-        suffixIcon: myKeyboardType != TextInputType.visiblePassword ? null : IconButton(
-            onPressed: onPressedSuffixIcon,
-            icon: isObSecure
-                ? Icon(Icons.visibility_off)
-                : Icon(Icons.visibility)),
-        errorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: themeData.errorColor, width: 1),
-        ),
-        fillColor: themeData.accentColor,
-        prefixIconColor: themeData.accentColor,
-        hintStyle: myTextStyle,
-        border: UnderlineInputBorder(
-          borderSide:
-              BorderSide(color: themeData.accentColor, width: 1),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide:
-              BorderSide(color: themeData.accentColor, width: 1),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide:
-              BorderSide(color: themeData.accentColor, width: 1),
+    myTextStyle = themeData.textTheme.headline3;
+    // myTextStyle = TextStyle(color: themeData.textTheme.headline3!.color, fontSize: 17);
+    return Container(
+      child: TextFormField(
+        controller: myController,
+        keyboardType: myKeyboardType,
+        textAlign: isAlignCenter ? TextAlign.center : TextAlign.start,
+        cursorColor: Colors.white,
+        style: myTextStyle,
+        obscureText: myKeyboardType != TextInputType.visiblePassword
+            ? false
+            : isObSecure,
+        decoration: InputDecoration(
+          filled: true,
+          //<-- SEE HERE
+          icon: textFieldIcon == null ? null : Icon(textFieldIcon),
+          iconColor: themeData.backgroundColor,
+          hintText: hintText,
+          fillColor: themeData.accentColor,
+          suffixIconColor: themeData.accentColor,
+          prefixIcon: textFieldIcon != null
+              ? null
+              : (myPrefixIcon == null ? null : Icon(myPrefixIcon)),
+          errorText: errorText,
+          suffixIcon: myKeyboardType != TextInputType.visiblePassword
+              ? null
+              : IconButton(
+                  onPressed: onPressedSuffixIcon,
+                  icon: isObSecure
+                      ? Icon(Icons.visibility_off)
+                      : Icon(Icons.visibility)),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: themeData.errorColor, width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          // fillColor: ,
+          prefixIconColor: themeData.accentColor,
+          hintStyle: myTextStyle,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: themeData.accentColor, width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: themeData.accentColor, width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: themeData.accentColor, width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       ),
     );

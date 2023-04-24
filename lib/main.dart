@@ -10,7 +10,7 @@ void main() {
   // MyChatSharedPrefrence.setBool("islogedin", false);
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => const MyApp(),
     ),
   );
@@ -26,7 +26,42 @@ class MyApp extends StatelessWidget {
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData(
+        errorColor: const Color(0xffFF7751),
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+          ),
+          actionsIconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: const Color(0xff2D343C),
+          modalBackgroundColor: const Color(0xff2D343C),
+        ),
+        dialogBackgroundColor: const Color(0xff2D343C),
+        accentColor: const Color(0xff2D343C),
+        backgroundColor: const Color(0xff262B31),
+        buttonColor: const Color(0xffFF7751),
+        cardColor: const Color(0xff2D343C),
+        textTheme: const TextTheme(
+          headline4: TextStyle(fontSize: 15, color: Colors.white),
+          headline3: TextStyle(fontSize: 20, color: Colors.white),
+          headline2: TextStyle(fontSize: 25, color: Colors.white),
+        ),
+        splashColor: const Color(0xFF755F5F),
+        primaryColor: Color(0xff262B31),
+        accentTextTheme: const TextTheme(
+          button: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+      ),
       theme: ThemeData(
         errorColor: Colors.redAccent,
         appBarTheme: const AppBarTheme(
@@ -39,22 +74,22 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xff173a05),
-        accentColor: Colors.white,
-        buttonColor: const Color(0xFFCCCCCC),
-        textTheme: TextTheme(headline4: TextStyle(fontSize: 20,color: Colors.white),),
-        splashColor: const Color(0xFF755F5F),
+        backgroundColor: Colors.white,
+        accentColor: const Color(0xff173a05),
+        buttonColor: const Color(0xff173a05),
+        textTheme: const TextTheme(
+          headline4: TextStyle(fontSize: 20, color: Color(0xff173a05)),
+        ),
+        splashColor: const Color(0xff32770f),
         accentTextTheme: const TextTheme(
           button: TextStyle(
             fontSize: 20,
-            color: Color(
-              0xFF6E6E6E,
-            ),
+            color: Colors.white,
           ),
         ),
       ),
       // home: MyChatSharedPrefrence.get("islogedin") ? LoginScreen() : LoginScreen(),
-      home: const LoginScreen(),
+      home: LoginScreen(),
     );
   }
 }

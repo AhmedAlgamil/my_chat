@@ -5,7 +5,7 @@ class DioHelper {
 
   static void init() {
     BaseOptions baseOptions = BaseOptions(
-      baseUrl: "https://technichal.prominaagency.com/api/",
+      baseUrl: "http://192.168.1.13/myChat/",
       receiveDataWhenStatusError: true,
     );
     dio = Dio(baseOptions);

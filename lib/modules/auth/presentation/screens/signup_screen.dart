@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/cubit/auth_states.dart';
-import '../../data/cubit/cubit.dart';
+import '../store/auth_cubit.dart';
+import '../store/auth_states.dart';
 import '../components/custom_button.dart';
 import '../components/custom_text_form_field.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  SignUpScreen({Key? key}) : super(key: key);
+  TextEditingController fullNameController = new TextEditingController();
+  TextEditingController phoneNumberController = new TextEditingController();
+  TextEditingController emailAddressController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +43,88 @@ class SignUpScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 70,
+                          // backgroundImage: NetworkImage(cubit.image == null ? "" :cubit.image!.path),
+                          backgroundImage: FileImage(cubit.image == null ? File("") :cubit.image!),
                         ),
                         FloatingActionButton(
-                          onPressed: () {},
-                          child: Icon(Icons.image),
+                          onPressed: () {
+                            showModalBottomSheet<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: mq.size.height * 0.15,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Ink(
+                                            child: InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              onTap: () {},
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      size: mq.size.width * 0.15,
+                                                      Icons.camera,
+                                                    ),
+                                                    Text(
+                                                      "Take photo",
+                                                      style: thData
+                                                          .textTheme.headline3,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Ink(
+                                            child: InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              onTap: () {
+                                                cubit.pickImage();
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      size: mq.size.width * 0.15,
+                                                      Icons.image,
+                                                    ),
+                                                    Text(
+                                                      "Select image",
+                                                      style: thData
+                                                          .textTheme.headline3,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          },
+                          child: const Icon(Icons.image),
                         )
                       ],
                     ),
@@ -56,42 +140,36 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       hintText: "Full Name",
-                      textFieldIcon: Icons.person,
+                      myController: fullNameController,
                       myKeyboardType: TextInputType.text,
-                      isObSecure: cubit.passwordIsShowen,
+                      errorText: cubit.errorFullName,
                     ),
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
                       hintText: "Phone Number",
-                      textFieldIcon: Icons.phone,
+                      myController: phoneNumberController,
                       myKeyboardType: TextInputType.number,
-                      isObSecure: cubit.passwordIsShowen,
+                      errorText: cubit.errorPhoneValidator,
                     ),
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
                       hintText: "Email",
-                      textFieldIcon: Icons.email,
+                      myController: emailAddressController,
                       myKeyboardType: TextInputType.emailAddress,
-                      onPressedSuffixIcon: () {
-                        if (cubit.passwordIsShowen) {
-                          cubit.showPassword(false);
-                        } else {
-                          cubit.showPassword(true);
-                        }
-                      },
-                      isObSecure: cubit.passwordIsShowen,
+                      errorText: cubit.errorEmailAddress,
                     ),
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
                       hintText: "Password",
-                      textFieldIcon: Icons.lock,
+                      myController: passwordController,
                       myKeyboardType: TextInputType.visiblePassword,
+                      errorText: cubit.errorPasswordValidator,
                       onPressedSuffixIcon: () {
                         if (cubit.passwordIsShowen) {
                           cubit.showPassword(false);
@@ -108,7 +186,14 @@ class SignUpScreen extends StatelessWidget {
                       width: mq.size.width * 0.6,
                       height: mq.size.height * 0.06,
                       buttonText: "Sign Up",
-                      onPressedButton: () {},
+                      onPressedButton: () {
+                        cubit.makeSignUp(
+                            fullNameController.text,
+                            phoneNumberController.text,
+                            emailAddressController.text,
+                            passwordController.text,
+                            cubit.image!);
+                      },
                     ),
                     SizedBox(
                       height: mq.size.height * 0.04,
