@@ -24,7 +24,9 @@ class SignUpScreen extends StatelessWidget {
         return AuthCubit();
       },
       child: BlocConsumer<AuthCubit, AuthStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          print(state);
+        },
         builder: (context, state) {
           AuthCubit cubit = AuthCubit.get(context);
           return Scaffold(
@@ -44,7 +46,8 @@ class SignUpScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 70,
                           // backgroundImage: NetworkImage(cubit.image == null ? "" :cubit.image!.path),
-                          backgroundImage: FileImage(cubit.image == null ? File("") :cubit.image!),
+                          backgroundImage: FileImage(
+                              cubit.image == null ? File("") : cubit.image!),
                         ),
                         FloatingActionButton(
                           onPressed: () {
@@ -74,7 +77,8 @@ class SignUpScreen extends StatelessWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Icon(
-                                                      size: mq.size.width * 0.15,
+                                                      size:
+                                                          mq.size.width * 0.15,
                                                       Icons.camera,
                                                     ),
                                                     Text(
@@ -105,7 +109,8 @@ class SignUpScreen extends StatelessWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Icon(
-                                                      size: mq.size.width * 0.15,
+                                                      size:
+                                                          mq.size.width * 0.15,
                                                       Icons.image,
                                                     ),
                                                     Text(
@@ -188,11 +193,11 @@ class SignUpScreen extends StatelessWidget {
                       buttonText: "Sign Up",
                       onPressedButton: () {
                         cubit.makeSignUp(
-                            fullNameController.text,
-                            phoneNumberController.text,
-                            emailAddressController.text,
-                            passwordController.text,
-                            cubit.image!);
+                          fullNameController.text,
+                          phoneNumberController.text,
+                          emailAddressController.text,
+                          passwordController.text,
+                        );
                       },
                     ),
                     SizedBox(

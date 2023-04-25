@@ -86,7 +86,6 @@ class AuthCubit extends Cubit<AuthStates> {
       if (myImage == null) return;
       File imageFile = File(myImage.path);
       image = imageFile;
-      photo = null;
       emit(InitialSelectImage());
     } on PlatformException catch (e) {
       print(e.message);
@@ -102,36 +101,10 @@ class AuthCubit extends Cubit<AuthStates> {
       );
       if (myImage == null) return;
       File imageFile = File(myImage.path);
-      photo = imageFile;
-      image = null;
+      image = imageFile;
     } on PlatformException catch (e) {
       print(e.message);
     }
-  }
-
-  makeSignUp2({
-    required String? full_name,
-    required String? phoneNumber,
-    required String? email,
-    required String? password,
-    String? is_active,
-    required File? fileToUpload,
-  }) async {
-    emit(InitialUploadImage());
-    authRepository
-        .makeSignUp(
-            full_name: full_name,
-            phoneNumber: phoneNumber,
-            email: email,
-            password: password,
-            fileToUpload: fileToUpload)
-        .then((value) {
-      print(value);
-      emit(UploadSuccess());
-    }).catchError((e) {
-      emit(UploadFaild());
-      print(e.toString());
-    });
   }
 
   void makeSignUp(
@@ -139,9 +112,8 @@ class AuthCubit extends Cubit<AuthStates> {
     String? phone,
     String? emailAddress,
     String? password,
-    File? fileToUpload,
   ) {
-    emit(LoginState());
+    emit(RegisterState());
     if (fullName!.isEmpty) {
       errorFullName = "Please enter your full name";
     } else {
@@ -188,18 +160,37 @@ class AuthCubit extends Cubit<AuthStates> {
         errorEmailAddress == null) {
       authRepository
           .makeSignUp(
-              full_name: fullName,
-              phoneNumber: phone,
-              email: emailAddress,
-              password: password,
-              fileToUpload: fileToUpload)
+        full_name: fullName,
+        phoneNumber: phone,
+        email: emailAddress,
+        password: password,
+      )
           .then((value) {
-        print(value);
-        emit(UploadSuccess());
+            if(image == null)
+              {
+                emit(RegisterSuccessState());
+              }
+            else{
+              if(value!.message == "Creation successful")
+                {
+                  makeUpload(value!.data![0].id, image);
+                  emit(RegisterSuccessState());
+                }
+            }
       }).catchError((e) {
-        emit(UploadFaild());
-        print(e.toString());
+        emit(RegisterFailedState());
+        print("Error SignUp ${e.toString()}");
       });
-    }
+    } else {}
+  }
+
+  void makeUpload(String? id, File? imageFile) {
+    authRepository
+        .makeUpload(id: id, imageFileProfile: imageFile)
+        .then((value) {
+          authModel = value;
+    })
+        .catchError((e) {
+    });
   }
 }

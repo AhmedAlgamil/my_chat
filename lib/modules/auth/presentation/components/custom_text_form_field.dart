@@ -7,6 +7,8 @@ class CustomTextFormField extends StatelessWidget {
     this.myController,
     this.myPrefixIcon,
     this.errorText,
+    this.width,
+    this.height,
     this.onPressedSuffixIcon,
     this.myKeyboardType,
     this.textFieldIcon,
@@ -19,24 +21,25 @@ class CustomTextFormField extends StatelessWidget {
   VoidCallback? onPressedSuffixIcon;
   bool isAlignCenter;
   bool isObSecure;
+  double? width;
+  double? height;
   IconData? myPrefixIcon;
   IconData? textFieldIcon;
   TextInputType? myKeyboardType;
-  TextStyle? myTextStyle;
   TextEditingController? myController;
 
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    myTextStyle = themeData.textTheme.headline3;
-    // myTextStyle = TextStyle(color: themeData.textTheme.headline3!.color, fontSize: 17);
     return Container(
+      width: width,
+      height: height,
       child: TextFormField(
         controller: myController,
         keyboardType: myKeyboardType,
         textAlign: isAlignCenter ? TextAlign.center : TextAlign.start,
         cursorColor: Colors.white,
-        style: myTextStyle,
+        style: themeData.textTheme.headline3,
         obscureText: myKeyboardType != TextInputType.visiblePassword
             ? false
             : isObSecure,
@@ -57,15 +60,22 @@ class CustomTextFormField extends StatelessWidget {
               : IconButton(
                   onPressed: onPressedSuffixIcon,
                   icon: isObSecure
-                      ? Icon(Icons.visibility_off)
-                      : Icon(Icons.visibility)),
+                      ? Icon(
+                          Icons.visibility_off,
+                          color: themeData.primaryColorLight,
+                        )
+                      : Icon(
+                          Icons.visibility,
+                          color: themeData.primaryColorLight,
+                        ),
+                ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: themeData.errorColor, width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
           // fillColor: ,
           prefixIconColor: themeData.accentColor,
-          hintStyle: myTextStyle,
+          hintStyle: themeData.textTheme.headline3,
           border: OutlineInputBorder(
             borderSide: BorderSide(color: themeData.accentColor, width: 1),
             borderRadius: BorderRadius.circular(10),

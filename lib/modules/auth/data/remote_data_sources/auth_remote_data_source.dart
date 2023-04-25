@@ -27,21 +27,35 @@ class AuthRemoteDataSource {
     required String? email,
     required String? password,
     String? is_active,
-    required File? fileToUpload,
   }) async {
-    String fileName = fileToUpload!.path.split('/').last;
-    FormData formData = FormData.fromMap({
+    FormData? formData = FormData.fromMap({
       "full_name": full_name,
       "phone_number": phoneNumber,
       "email": email,
       "password": password,
-      "is_active": "true",
-      "fileToUpload":
-          await MultipartFile.fromFile(fileToUpload!.path, filename: fileName),
+      "is_active": "1",
     });
     try {
       final res = await DioHelper.makePostData(
-          url: "user_table/table_insert.php", data: formData);
+          url: "user_table/table_insert.php", data: formData!);
+      return AuthModel.fromJson(res.data);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<AuthModel?> makeUploadProfileImage({
+    required String? id,
+    required File? imageFile,
+  }) async {
+    String fileName = imageFile!.path.split('/').last;
+    FormData? formData = FormData.fromMap({
+      "id": id,
+      "fileToUpload": await MultipartFile.fromFile(imageFile.path, filename:fileName),
+    });
+    try {
+      final res = await DioHelper.makePostData(
+          url: "user_table/upload.php", data: formData!);
       return AuthModel.fromJson(res.data);
     } catch (error) {
       rethrow;

@@ -26,15 +26,27 @@ class AuthRepository {
     required String? email,
     required String? password,
     String? is_active,
-    required File? fileToUpload,
   }) async {
     try {
       return await authRemoteDataSource.makeSignUp(
         full_name: full_name,
         phoneNumber: phoneNumber,
         email: email,
-        fileToUpload: fileToUpload,
         password: password
+      );
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<AuthModel?> makeUpload({
+    required String? id,
+    required File? imageFileProfile,
+  }) async {
+    try {
+      return await authRemoteDataSource.makeUploadProfileImage(
+          id: id,
+          imageFile: imageFileProfile,
       );
     } catch (error) {
       rethrow;

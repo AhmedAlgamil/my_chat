@@ -32,7 +32,7 @@ class CustomTextFormField extends StatelessWidget {
       controller: myController,
       keyboardType: myKeyboardType,
       textAlign: isAlignCenter ? TextAlign.center : TextAlign.start,
-      cursorColor: themeData.accentColor,
+      cursorColor: themeData.primaryColorLight,
       style: myTextStyle,
       obscureText: myKeyboardType != TextInputType.visiblePassword ? false : isObSecure,
       decoration: InputDecoration(
