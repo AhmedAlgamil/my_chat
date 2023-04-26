@@ -59,6 +59,7 @@ class CustomTextFormField extends StatelessWidget {
               ? null
               : IconButton(
                   onPressed: onPressedSuffixIcon,
+                  splashRadius: 20,
                   icon: isObSecure
                       ? Icon(
                           Icons.visibility_off,

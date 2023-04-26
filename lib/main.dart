@@ -106,7 +106,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: isLoginSuccess ? HomePageScreen() : LoginScreen(),
+      home: HomePageScreen(),
+      // home: isLoginSuccess ? HomePageScreen() : LoginScreen(),
     );
   }
 }
