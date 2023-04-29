@@ -16,6 +16,8 @@ class ChatMessageCubit extends Cubit<ChatMessageStates> {
 
   AuthModel? authModel;
 
+  List<GlobalKey>? keies = null;
+
   // void getNews() {
   //   DioHelper.getData(
   //     url: "top-headlines",
@@ -28,6 +30,10 @@ class ChatMessageCubit extends Cubit<ChatMessageStates> {
   //   });
   // }
 
-  void makeSignUp() {}
-
+  void addGlobalKeies() {
+    for (int i = 0; i < 5; i++) {
+      keies!.add(GlobalKey());
+      emit(IntialChatMessageState());
+    }
+  }
 }

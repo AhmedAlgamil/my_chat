@@ -28,7 +28,7 @@ class HomePageScreen extends StatelessWidget {
     ];
     return BlocProvider(
       create: (context) {
-        return HomePageCubit();
+        return HomePageCubit()..askPermissions();
       },
       child: BlocConsumer<HomePageCubit, HomePageStates>(
         listener: (context, state) {},
@@ -64,22 +64,35 @@ class HomePageScreen extends StatelessWidget {
             ),
             backgroundColor: thData.backgroundColor,
             body: ListView.builder(
-              itemCount: titles.length,
+              itemCount: cubit.contacts!.length,
               itemBuilder: (context, index) {
-                return  Column(
+                return Column(
                   children: <Widget>[
                     ListTile(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChatMessageScreen(chaterName: titles[index]),
-                            ),
-                                );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ChatMessageScreen(chaterName: titles[index]),
+                          ),
+                        );
                       },
-                      leading: CircleAvatar(child: Icon(Icons.person,size: 20,color: thData.accentColor,),),
-                      title: Text(titles[index],style: TextStyle(fontSize: 20),),
-                      subtitle: Text(titles[index],style: TextStyle(fontSize: 15),),
+                      leading: CircleAvatar(
+                        child: Icon(
+                          Icons.person,
+                          size: 20,
+                          color: thData.accentColor,
+                        ),
+                      ),
+                      title: Text(
+                        cubit.contacts![index].displayName!,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      subtitle: Text(
+                        titles[index],
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
                     Divider(
                       height: 0,
