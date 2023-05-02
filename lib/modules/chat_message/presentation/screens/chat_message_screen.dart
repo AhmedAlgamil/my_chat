@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_chat/modules/chat_message/data/models/message.dart';
 
 import '../components/chat_message.dart';
+import '../components/reply_message_component.dart';
 import '../store/chat_message_cubit.dart';
 import '../store/chat_message_states.dart';
 
@@ -11,10 +13,9 @@ class ChatMessageScreen extends StatelessWidget {
     this.chaterName,
   }) : super(key: key);
 
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
   String? chaterName;
+
+  TextEditingController messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,20 @@ class ChatMessageScreen extends StatelessWidget {
           ScrollController _controller = new ScrollController();
 
           return Scaffold(
+            floatingActionButton: false
+                ? Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 60.0, left: 30),
+                child: FloatingActionButton(
+                    heroTag: 'down',
+                    onPressed: () {},
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.arrow_downward_rounded),
+                    mini: true),
+              ),
+            )
+                : Container(),
             appBar: AppBar(
               title: Ink(
                 child: InkWell(
@@ -55,7 +70,10 @@ class ChatMessageScreen extends StatelessWidget {
                       SizedBox(
                         width: mq.size.width * 0.02,
                       ),
-                      Text(chaterName!,style: thData.textTheme.headline4,),
+                      Text(
+                        chaterName!,
+                        style: thData.textTheme.headline4,
+                      ),
                     ],
                   ),
                 ),
@@ -78,155 +96,110 @@ class ChatMessageScreen extends StatelessWidget {
             ),
             backgroundColor: thData.backgroundColor,
             body: SizedBox(
-              height: mq.size.height,
-              child: Stack(
+              child: Column(
                 children: [
-                  Align(
-                    alignment: AlignmentDirectional.topCenter,
-                    child: SizedBox(
-                      height: mq.size.height * 0.8,
-                      child: ListView.builder(
-                        itemCount: 3,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            // color:  Color(0xff1b8daa),
-                            child: ChatMessageComponent(
-                                myMessage:
-                                    "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was"
-                                    " born and I will give you a complete account of the system, and expound the actual teachings of the "
-                                    "great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or"
-                                    " avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue "
-                                    "pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who "
-                                    "loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally "
-                                    "circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example,"
-                                    " which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any "
-                                    "right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences,"
-                                    " or one who avoids a pain that produces no resultant pleasure?"),
-                          );
-                        },
+                  Expanded(
+                    child: Align(
+                      child: SizedBox(
+                        child: ListView.builder(
+                          itemCount: cubit.messages == null
+                              ? 0
+                              : cubit.messages!.length,
+                          reverse: false,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              child: ChatMessageComponent(
+                                myMessage: cubit.messages![index].message,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
+                  if (false)
+                    ReplyMessageComponent(
+                      userName: "userName",
+                      message: "Message",
+                    ),
                   Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    child: Row(
                       children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.1,
-                          margin: EdgeInsets.symmetric(horizontal: 15),
-                          child: Ink(
+                        Expanded(
+                          flex: 7,
+                          child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: const LinearGradient(
-                                stops: [0.02, 0.02],
-                                colors: [
-                                  Colors.red,
-                                  Colors.white,
-                                ],
-                              ),
-                            ),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(10),
-                              onTap: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("userName"),
-                                        SizedBox(height: 5,),
-                                        Text("repliedMessage"),
-                                      ],
-                                    ),
-                                    Icon(Icons.access_alarm,size: 50,),
-                                  ],
+                                color: thData.accentColor,
+                                borderRadius: BorderRadius.circular(40)),
+                            child: TextField(
+                              controller: messageController,
+                              style: thData.textTheme.headline4,
+                              minLines: 1,
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: thData.accentColor,
+                                  ),
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: thData.accentColor,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: thData.accentColor,
+                                  ),
+                                ),
+                                prefixIcon: IconButton(
+                                  icon: Icon(Icons.emoji_emotions_outlined),
+                                  onPressed: () {},
+                                  color: thData.primaryColorLight,
+                                  splashRadius: 20,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.attach_file),
+                                  onPressed: () {},
+                                  color: thData.primaryColorLight,
+                                  splashRadius: 20,
+                                ),
+                                hintText: "Message",
+                                hintStyle: thData.textTheme.headline3,
                               ),
+                              onChanged: (value){
+                                cubit.onTextChanged(value);
+                              },
                             ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 5,
-                              child: Container(
-                                width: mq.size.width * 1,
-                                decoration: BoxDecoration(
-                                    color: thData.accentColor,
-                                    borderRadius: BorderRadius.circular(50)),
-                                child: TextField(
-                                  style: thData.textTheme.headline4,
-                                  minLines: 1,
-                                  maxLines: 5,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: BorderSide(
-                                        width: 1,
-                                        color: thData.accentColor,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: BorderSide(
-                                        width: 1,
-                                        color: thData.accentColor,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: BorderSide(
-                                        width: 1,
-                                        color: thData.accentColor,
-                                      ),
-                                    ),
-                                    prefixIcon: IconButton(
-                                      icon: Icon(Icons.emoji_emotions_outlined),
-                                      onPressed: () {},
-                                      color: thData.primaryColorLight,
-                                      splashRadius: 20,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(Icons.attach_file),
-                                      onPressed: () {},
-                                      color: thData.primaryColorLight,
-                                      splashRadius: 20,
-                                    ),
-                                    hintText: "Message",
-                                    hintStyle: thData.textTheme.headline3,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 1,
-                                child: FloatingActionButton(
-                                  onPressed: () {},
-                                  backgroundColor: thData.primaryColorLight,
-                                  child:
-                                      Icon(Icons.mic, color: thData.primaryColor),
-                                ))
-                          ],
-                        ),
+                        Expanded(
+                            flex: 1,
+                            child: FloatingActionButton(
+                              heroTag: 'record',
+                              onPressed: () {
+                                if(cubit.isRecordButton){
+
+                                }
+                                else{
+                                  Message message = Message(id: "1",currentTime: DateTime.now().toString(),message: messageController.text,senderId: "2");
+                                  cubit.addMessage(message);
+                                  cubit.isRecordButton = true;
+                                  messageController.clear();
+                                }
+                              },
+                              mini: true,
+                              backgroundColor: thData.primaryColorLight,
+                              child:
+                              cubit.isRecordButton ? Icon(Icons.mic, color: thData.primaryColor) : Icon(Icons.send, color: thData.primaryColor),
+                            ))
                       ],
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional.bottomStart,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 60.0, left: 10),
-                      child: FloatingActionButton(
-                          onPressed: () {},
-                          backgroundColor: Colors.blue,
-                          child: Icon(Icons.arrow_downward_rounded),
-                          mini: true),
                     ),
                   ),
                 ],

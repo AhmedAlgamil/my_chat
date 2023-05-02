@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_chat/modules/chat_message/presentation/components/reply_message_component.dart';
 
 class ChatMessageComponent extends StatelessWidget {
   ChatMessageComponent(
@@ -17,7 +18,7 @@ class ChatMessageComponent extends StatelessWidget {
     return Row(
       textDirection: isSender ? TextDirection.ltr : TextDirection.rtl,
       crossAxisAlignment:
-          isSender ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+      isSender ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
         Container(
           key: key,
@@ -103,44 +104,7 @@ class ChatMessageComponent extends StatelessWidget {
                     child: const Icon(Icons.menu),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      gradient: const LinearGradient(
-                        stops: [0.02, 0.02],
-                        colors: [
-                          Colors.red,
-                          Colors.white,
-                        ],
-                      ),
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("userName"),
-                                SizedBox(height: 5,),
-                                Text("repliedMessage"),
-                              ],
-                            ),
-                            Icon(Icons.access_alarm,size: 50,),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                ReplyMessageComponent(userName: "userName",message: "Message",),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: RichText(

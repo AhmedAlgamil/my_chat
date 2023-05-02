@@ -28,7 +28,7 @@ class HomePageScreen extends StatelessWidget {
     ];
     return BlocProvider(
       create: (context) {
-        return HomePageCubit()..askPermissions();
+        return HomePageCubit()..getAllChaters();
       },
       child: BlocConsumer<HomePageCubit, HomePageStates>(
         listener: (context, state) {},
@@ -54,7 +54,7 @@ class HomePageScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => LoginScreen(),
                           ),
-                          (route) => false);
+                              (route) => false);
                     },
                     icon: const Icon(Icons.menu),
                     splashRadius: 20,
@@ -64,7 +64,7 @@ class HomePageScreen extends StatelessWidget {
             ),
             backgroundColor: thData.backgroundColor,
             body: ListView.builder(
-              itemCount: cubit.contacts!.length,
+              itemCount: cubit.chaters == null ? 0 : cubit.chaters!.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: <Widget>[
@@ -74,7 +74,7 @@ class HomePageScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                ChatMessageScreen(chaterName: titles[index]),
+                                ChatMessageScreen(chaterName: cubit.chaters![index].data![0].fullName!,),
                           ),
                         );
                       },
@@ -86,11 +86,11 @@ class HomePageScreen extends StatelessWidget {
                         ),
                       ),
                       title: Text(
-                        cubit.contacts![index].displayName!,
+                        cubit.chaters![index].data![0].fullName!,
                         style: TextStyle(fontSize: 20),
                       ),
                       subtitle: Text(
-                        titles[index],
+                        cubit.chaters![index].data![0].phoneNumber!,
                         style: TextStyle(fontSize: 15),
                       ),
                     ),

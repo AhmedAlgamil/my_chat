@@ -2,18 +2,18 @@ import 'package:dio/dio.dart';
 import 'package:my_chat/modules/auth/data/models/auth_model.dart';
 
 import '../../../../shared/network/dio_helper.dart';
+import '../models/Chaters.dart';
 
-class AuthRemoteDataSource {
-  Future<AuthModel?> login({
+class HomePageDataSource {
+  Future<Chaters?> getAllChaters({
     required String? phoneNumber,
-    required String? password,
   }) async {
     FormData formData =
-        FormData.fromMap({"phone_number": phoneNumber, "password": password});
+        FormData.fromMap({"phone_number": phoneNumber});
     try {
       final res = await DioHelper.makePostData(
-          url: "user_table/table_Login.php", data: formData);
-      return AuthModel.fromJson(res.data);
+          url: "user_table/get_hpone_numbers.php", data: formData);
+      return Chaters.fromJson(res.data);
     } catch (error) {
       rethrow;
     }
