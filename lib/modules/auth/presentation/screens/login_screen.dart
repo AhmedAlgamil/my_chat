@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_chat/modules/auth/presentation/screens/signup_screen.dart';
 import 'package:my_chat/shared/local/shared_prefrence.dart';
 
+import '../../../../generated/l10n.dart';
 import '../../../home_page/presentation/screens/home_page_screen.dart';
 import '../store/auth_cubit.dart';
 import '../store/auth_states.dart';
@@ -56,23 +57,26 @@ class LoginScreen extends StatelessWidget {
               child: Container(
                 width: mq.size.width,
                 child: Column(
+                  textDirection: TextDirection.rtl,
                   children: [
                     SizedBox(
                       height: mq.size.height * 0.02,
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.only(left: mq.size.width * 0.1,),
-                      child: Text(
-                        "Hello There",
-                        style: thData.textTheme.headline4,
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Container(
+                        padding: EdgeInsets.only(left: mq.size.width * 0.1,),
+                        child: Text(
+                          S.of(context).HelloThere,
+                          style: thData.textTheme.headline4,
+                        ),
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.only(left: mq.size.width * 0.1,),
                       child: Text(
-                        "Welcome Back",
+                        S.of(context).welcomeBack,
                         style: thData.textTheme.headline2,
                       ),
                     ),
@@ -81,8 +85,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       width: mq.size.width * 0.8,
-                      hintText: "Phone Number",
-                      myKeyboardType: TextInputType.number,
+                      hintText: S.of(context).phoneNumber,
+                      myKeyboardType: TextInputType.phone,
                       myController: phoneController,
                       errorText: cubit.errorPhoneValidator,
                     ),
@@ -91,7 +95,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       width: mq.size.width * 0.8,
-                      hintText: "Password",
+                      hintText: S.of(context).Password,
                       myController: passwordController,
                       errorText: cubit.errorPasswordValidator,
                       myKeyboardType: TextInputType.visiblePassword,
@@ -112,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                       padding: EdgeInsets.only(right: mq.size.width * 0.1),
                       child: GestureDetector(
                         child: Text(
-                          "Forget Password?",
+                          S.of(context).forgetPassword,
                           style: thData.textTheme.headline5,
                         ),
                         onTap: () {},
@@ -124,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                     CustomButton(
                       width: mq.size.width * 0.8,
                       height: mq.size.height * 0.06,
-                      buttonText: "Login",
+                      buttonText: S.of(context).Login,
                       onPressedButton: () {
                         cubit.makeLogin(
                           phoneController.text,
@@ -139,12 +143,12 @@ class LoginScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don\'t Have Account?",
+                          S.of(context).noAccount,
                           style: thData.textTheme.headline4,
                         ),
                         GestureDetector(
                           child: Text(
-                            "SIGN UP",
+                            S.of(context).signUp,
                             style: thData.textTheme.headline5,
                           ),
                           onTap: () {

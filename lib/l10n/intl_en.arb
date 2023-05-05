@@ -1,1 +1,26 @@
-{}
+{
+  "@@local": "en",
+  "myChat": "My Chat",
+  "HelloThere": "Hello There",
+  "welcomeBack": "Welcome Back",
+  "phoneNumber": "Phone Number",
+  "Password": "Password",
+  "forgetPassword": "Forget Password?",
+  "Login": "Login",
+  "noAccount": "Don't Have Account?",
+  "signUp": "SIGN UP",
+  "takePhoto": "Take photo",
+  "selectImage": "Select image",
+  "createAccount": "Create Your Account",
+  "fullName": "Full Name",
+  "enterEmail": "Please enter email address",
+  "enterPassword": "Please enter Password",
+  "passwordValidation": "it must have at least 8 digits",
+  "emailValidation": "this email is not valid",
+  "phoneValidation": "Please enter valid mobile number",
+  "enterPhone": "Please enter phone number",
+  "enterFullName": "Please enter your full name",
+  "offlineMode": "You are offline",
+  "Email": "Email"
+
+}

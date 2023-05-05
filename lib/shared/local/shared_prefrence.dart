@@ -11,6 +11,10 @@ class MyChatSharedPrefrence {
     return await sharedPreferences?.setBool(key, value);
   }
 
+  static Future<bool?> remove(String key,) async {
+    return await sharedPreferences?.remove(key);
+  }
+
   static Future<bool?> setString(String key, String? value) async {
     return await sharedPreferences?.setString(key, value!);
   }

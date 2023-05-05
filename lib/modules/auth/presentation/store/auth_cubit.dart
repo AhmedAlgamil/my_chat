@@ -9,10 +9,17 @@ import 'package:my_chat/modules/auth/data/models/auth_model.dart';
 import 'package:my_chat/modules/auth/data/repository/auth_repository.dart';
 import 'package:my_chat/modules/auth/presentation/store/auth_states.dart';
 
+import '../../../../generated/l10n.dart';
+
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(IntialAuthState());
 
-  static AuthCubit get(BuildContext context) => BlocProvider.of(context);
+  static BuildContext? myContext;
+
+  static AuthCubit get(BuildContext context) {
+    myContext = context;
+    return BlocProvider.of(context);
+  }
 
   bool passwordIsShowen = true;
   String? errorMessage = "";
@@ -36,21 +43,26 @@ class AuthCubit extends Cubit<AuthStates> {
 
   void makeLogin(String? phone, String? password) {
     emit(LoginState());
-    if (phone!.isEmpty && password!.isEmpty) {
-      errorPhoneValidator = "Please enter phone number";
-      errorPasswordValidator = "Please enter password";
+    if (phone!.isEmpty) {
+      errorPhoneValidator = S.of(myContext!).enterPhone;
     } else {
-      if (password!.length < 8) {
-        errorPasswordValidator = "it must have at least 8 digits";
-      } else {
-        errorPasswordValidator = null;
-      }
-      String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-      RegExp regExp = RegExp(pattern);
-      if (!regExp.hasMatch(phone)) {
-        errorPhoneValidator = 'Please enter valid mobile number';
+      // Saved Pattern
+      // String phonePattern = r"\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$";
+      String phonePattern = r"(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$";
+      RegExp phoneRegExp = RegExp(phonePattern);
+      if (!phoneRegExp.hasMatch(phone!)) {
+        errorPhoneValidator = S.of(myContext!).phoneValidation;
       } else {
         errorPhoneValidator = null;
+      }
+    }
+    if (password!.isEmpty) {
+      errorPasswordValidator = S.of(myContext!).enterPassword;
+    } else {
+      if (password!.length < 8) {
+        errorPasswordValidator = S.of(myContext!).passwordValidation;
+      } else {
+        errorPasswordValidator = null;
       }
     }
     if (errorPhoneValidator == null && errorPasswordValidator == null) {
@@ -61,8 +73,8 @@ class AuthCubit extends Cubit<AuthStates> {
       )
           .then(
         (value) {
-          emit(LoginLoadedSuccessState());
           authModel = value;
+          emit(LoginLoadedSuccessState());
         },
       ).catchError((e) {
         emit(LoginFailedState());
@@ -70,7 +82,7 @@ class AuthCubit extends Cubit<AuthStates> {
           if (e.message.contains("SocketException")) {
             // print(e.message);
             emit(LoginFailedState());
-            errorMessage = "You are offline";
+            errorMessage = S.of(myContext!).offlineMode;
           }
         }
       });
@@ -115,41 +127,41 @@ class AuthCubit extends Cubit<AuthStates> {
   ) {
     emit(RegisterState());
     if (fullName!.isEmpty) {
-      errorFullName = "Please enter your full name";
+      errorFullName = S.of(myContext!).enterFullName;
     } else {
       errorFullName = null;
     }
 
     if (phone!.isEmpty) {
-      errorPhoneValidator = "Please enter phone number";
+      errorPhoneValidator = S.of(myContext!).enterPhone;
     } else {
       String phonePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
       RegExp phoneRegExp = RegExp(phonePattern);
       if (!phoneRegExp.hasMatch(phone!)) {
-        errorPhoneValidator = 'Please enter valid mobile number';
+        errorPhoneValidator = S.of(myContext!).phoneValidation;
       } else {
         errorPhoneValidator = null;
       }
     }
 
     if (emailAddress!.isEmpty) {
-      errorEmailAddress = "Please enter email address";
+      errorEmailAddress = S.of(myContext!).enterEmail;
     } else {
       String emailPattern =
           "^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*\$";
       RegExp emailRegExp = RegExp(emailPattern);
       if (!emailRegExp.hasMatch(emailAddress!)) {
-        errorEmailAddress = 'this email is not valid';
+        errorEmailAddress = S.of(myContext!).emailValidation;
       } else {
         errorEmailAddress = null;
       }
     }
 
     if (password!.isEmpty) {
-      errorPasswordValidator = "Please enter email address";
+      errorPasswordValidator = S.of(myContext!).enterPassword;
     } else {
       if (password!.length < 8) {
-        errorPasswordValidator = "it must have at least 8 digits";
+        errorPasswordValidator = S.of(myContext!).passwordValidation;
       } else {
         errorPasswordValidator = null;
       }
@@ -166,17 +178,15 @@ class AuthCubit extends Cubit<AuthStates> {
         password: password,
       )
           .then((value) {
-            if(image == null)
-              {
-                emit(RegisterSuccessState());
-              }
-            else{
-              if(value!.message == "Creation successful")
-                {
-                  makeUpload(value!.data![0].id, image);
-                  emit(RegisterSuccessState());
-                }
-            }
+        if (image == null) {
+          emit(RegisterSuccessState());
+        } else {
+          if (value!.message == "Creation successful") {
+            print(value!.data![0].id);
+            makeUpload(value!.data![0].id, image);
+            emit(RegisterSuccessState());
+          }
+        }
       }).catchError((e) {
         emit(RegisterFailedState());
         print("Error SignUp ${e.toString()}");
@@ -188,9 +198,10 @@ class AuthCubit extends Cubit<AuthStates> {
     authRepository
         .makeUpload(id: id, imageFileProfile: imageFile)
         .then((value) {
-          authModel = value;
-    })
-        .catchError((e) {
+      authModel = value;
+      print(value!.message);
+    }).catchError((e) {
+      print("Error SignUp ${e.toString()}");
     });
   }
 }

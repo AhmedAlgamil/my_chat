@@ -36,6 +36,14 @@ class ChatMessageCubit extends Cubit<ChatMessageStates> {
   //   });
   // }
 
+  bool isEmojiOn = false;
+
+  void showEmoji(bool isEmojiOn)
+  {
+    emit(onEmojiShowed());
+    this.isEmojiOn = isEmojiOn;
+  }
+
   void onTextChanged(String myValue){
     if(myValue.isEmpty)
     {
@@ -50,11 +58,6 @@ class ChatMessageCubit extends Cubit<ChatMessageStates> {
   void addMessage(Message? message){
     messages!.add(message!);
     // messages![index] = message!;
-    index++;
-    print(message!.message);
-    print(message!.currentTime);
-    print(message!.id);
-    print(message!.senderId);
     emit(AddMessage());
   }
 

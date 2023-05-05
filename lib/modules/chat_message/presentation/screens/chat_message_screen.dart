@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_chat/modules/chat_message/data/models/message.dart';
 
 import '../components/chat_message.dart';
+import '../components/emojis_keyboard.dart';
 import '../components/reply_message_component.dart';
 import '../store/chat_message_cubit.dart';
 import '../store/chat_message_states.dart';
@@ -117,6 +118,11 @@ class ChatMessageScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  EmojisKeyBoard(
+                    emojiKeyboardController: messageController,
+                    isEmojiOn: cubit.isEmojiOn,
+                  ),
                   if (false)
                     ReplyMessageComponent(
                       userName: "userName",
@@ -160,7 +166,13 @@ class ChatMessageScreen extends StatelessWidget {
                                 ),
                                 prefixIcon: IconButton(
                                   icon: Icon(Icons.emoji_emotions_outlined),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    if (cubit.isEmojiOn) {
+                                      cubit.showEmoji(false);
+                                    } else {
+                                      cubit.showEmoji(true);
+                                    }
+                                  },
                                   color: thData.primaryColorLight,
                                   splashRadius: 20,
                                 ),

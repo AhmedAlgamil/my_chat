@@ -21,5 +21,38 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "Email": MessageLookupByLibrary.simpleMessage("Email"),
+        "HelloThere": MessageLookupByLibrary.simpleMessage("Hello There"),
+        "Login": MessageLookupByLibrary.simpleMessage("Login"),
+        "Password": MessageLookupByLibrary.simpleMessage("Password"),
+        "createAccount":
+            MessageLookupByLibrary.simpleMessage("Create Your Account"),
+        "emailValidation":
+            MessageLookupByLibrary.simpleMessage("this email is not valid"),
+        "enterEmail":
+            MessageLookupByLibrary.simpleMessage("Please enter email address"),
+        "enterFullName":
+            MessageLookupByLibrary.simpleMessage("Please enter your full name"),
+        "enterPassword":
+            MessageLookupByLibrary.simpleMessage("Please enter Password"),
+        "enterPhone":
+            MessageLookupByLibrary.simpleMessage("Please enter phone number"),
+        "forgetPassword":
+            MessageLookupByLibrary.simpleMessage("Forget Password?"),
+        "fullName": MessageLookupByLibrary.simpleMessage("Full Name"),
+        "myChat": MessageLookupByLibrary.simpleMessage("My Chat"),
+        "noAccount":
+            MessageLookupByLibrary.simpleMessage("Don\'t Have Account?"),
+        "offlineMode": MessageLookupByLibrary.simpleMessage("You are offline"),
+        "passwordValidation": MessageLookupByLibrary.simpleMessage(
+            "it must have at least 8 digits"),
+        "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone Number"),
+        "phoneValidation": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid mobile number"),
+        "selectImage": MessageLookupByLibrary.simpleMessage("Select image"),
+        "signUp": MessageLookupByLibrary.simpleMessage("SIGN UP"),
+        "takePhoto": MessageLookupByLibrary.simpleMessage("Take photo"),
+        "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome Back")
+      };
 }

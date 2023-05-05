@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../../../generated/l10n.dart';
+import '../../../home_page/presentation/screens/home_page_screen.dart';
 import '../store/auth_cubit.dart';
 import '../store/auth_states.dart';
 import '../components/custom_button.dart';
@@ -26,6 +29,14 @@ class SignUpScreen extends StatelessWidget {
       child: BlocConsumer<AuthCubit, AuthStates>(
         listener: (context, state) {
           print(state);
+          if (state is RegisterSuccessState) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePageScreen(),
+                ),
+                (route) => false);
+          }
         },
         builder: (context, state) {
           AuthCubit cubit = AuthCubit.get(context);
@@ -82,7 +93,7 @@ class SignUpScreen extends StatelessWidget {
                                                       Icons.camera,
                                                     ),
                                                     Text(
-                                                      "Take photo",
+                                                      S.of(context).takePhoto,
                                                       style: thData
                                                           .textTheme.headline3,
                                                     ),
@@ -114,7 +125,7 @@ class SignUpScreen extends StatelessWidget {
                                                       Icons.image,
                                                     ),
                                                     Text(
-                                                      "Select image",
+                                                      S.of(context).selectImage,
                                                       style: thData
                                                           .textTheme.headline3,
                                                     ),
@@ -137,14 +148,14 @@ class SignUpScreen extends StatelessWidget {
                       height: mq.size.height * 0.04,
                     ),
                     Text(
-                      "Create Your Account ",
+                      S.of(context).createAccount,
                       style: thData.textTheme.headline4,
                     ),
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
-                      hintText: "Full Name",
+                      hintText: S.of(context).fullName,
                       myController: fullNameController,
                       myKeyboardType: TextInputType.text,
                       errorText: cubit.errorFullName,
@@ -152,17 +163,24 @@ class SignUpScreen extends StatelessWidget {
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
-                    CustomTextFormField(
-                      hintText: "Phone Number",
-                      myController: phoneNumberController,
-                      myKeyboardType: TextInputType.number,
-                      errorText: cubit.errorPhoneValidator,
+                    InternationalPhoneNumberInput(
+                      textFieldController: phoneNumberController,
+                      hintText: S.of(context).phoneNumber,
+                      onInputChanged: (PhoneNumber value) {
+                        print(value.phoneNumber);
+                      },
                     ),
+                    // CustomTextFormField(
+                    //   hintText: "Phone Number",
+                    //   myController: phoneNumberController,
+                    //   myKeyboardType: TextInputType.number,
+                    //   errorText: cubit.errorPhoneValidator,
+                    // ),
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
-                      hintText: "Email",
+                      hintText: S.of(context).Email,
                       myController: emailAddressController,
                       myKeyboardType: TextInputType.emailAddress,
                       errorText: cubit.errorEmailAddress,
@@ -171,7 +189,7 @@ class SignUpScreen extends StatelessWidget {
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
-                      hintText: "Password",
+                      hintText: S.of(context).Password,
                       myController: passwordController,
                       myKeyboardType: TextInputType.visiblePassword,
                       errorText: cubit.errorPasswordValidator,
@@ -190,7 +208,7 @@ class SignUpScreen extends StatelessWidget {
                     CustomButton(
                       width: mq.size.width * 0.6,
                       height: mq.size.height * 0.06,
-                      buttonText: "Sign Up",
+                      buttonText: S.of(context).signUp,
                       onPressedButton: () {
                         cubit.makeSignUp(
                           fullNameController.text,

@@ -1,13 +1,12 @@
-import 'package:fast_contacts/fast_contacts.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_chat/modules/auth/data/models/auth_model.dart';
-import 'package:my_chat/modules/auth/data/repository/auth_repository.dart';
 import 'package:my_chat/modules/home_page/data/repository/home_page_repository.dart';
 import 'package:my_chat/modules/home_page/presentation/store/home_page_states.dart';
-import 'package:my_chat/shared/network/dio_helper.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import '../../../../generated/l10n.dart';
+import '../../../../main.dart';
 import '../../data/models/Chaters.dart';
 
 class HomePageCubit extends Cubit<HomePageStates> {
@@ -26,19 +25,28 @@ class HomePageCubit extends Cubit<HomePageStates> {
   AuthModel? authModel;
 
   Future<void> getAllChaters() async {
+    emit(GetAllContactsState());
     PermissionStatus permissionStatus = await _getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
-      contacts = await FastContacts.getAllContacts();
-      for(int i = 0 ; i < contacts!.length;i++)
-      {
-        homePageRepository?.getAllChaters(phoneNumber: contacts![i].phones[0].number).then((value) {
-          // chaters!.add(value!);
-          print(value!.data![0].fullName);
-        }).catchError((e){
-          print(e);
-        });
-      }
+      // contacts = await ContactsService.getContacts();
+      List<String> phones = ["01092788160","01098283826","01099978728","01277823947","01025626183"];
 
+      for(int i = 0;i < contacts!.length;i++)
+        {
+          homePageRepository?.getAllChaters(phoneNumber: phones[i]).then((value) {
+            if(value!.data![0] == null){
+
+            }
+            else{
+              chaters!.add(value!);
+              print(value!.data![0].fullName);
+              emit(GettingSucceful());
+            }
+
+          }).catchError((e){
+            print(e);
+          });
+        }
     } else {
       _handleInvalidPermissions(permissionStatus);
     }

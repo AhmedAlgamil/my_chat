@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_chat/modules/auth/presentation/screens/login_screen.dart';
 
+import '../../../../generated/l10n.dart';
+import '../../../../main.dart';
 import '../../../../shared/local/shared_prefrence.dart';
 import '../../../chat_message/presentation/screens/chat_message_screen.dart';
 import '../store/home_page_cubit.dart';
@@ -36,11 +38,13 @@ class HomePageScreen extends StatelessWidget {
           HomePageCubit cubit = HomePageCubit.get(context);
           return Scaffold(
             appBar: AppBar(
-              title: const Text("My Chat"),
+              title: Text(S.of(context).myChat),
               backgroundColor: thData.accentColor,
               actions: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // cubit.changeLanguage();
+                    },
                     icon: const Icon(Icons.search),
                     splashRadius: 20),
                 Padding(
@@ -48,7 +52,7 @@ class HomePageScreen extends StatelessWidget {
                   child: IconButton(
                     onPressed: () {
                       MyChatSharedPrefrence.setBool("isLogedIn", false);
-                      MyChatSharedPrefrence.setString("myId", null);
+                      MyChatSharedPrefrence.remove("myId");
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -64,7 +68,7 @@ class HomePageScreen extends StatelessWidget {
             ),
             backgroundColor: thData.backgroundColor,
             body: ListView.builder(
-              itemCount: cubit.chaters == null ? 0 : cubit.chaters!.length,
+              itemCount: cubit.contacts == null ? 0 : cubit.contacts!.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: <Widget>[
@@ -74,7 +78,8 @@ class HomePageScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                ChatMessageScreen(chaterName: cubit.chaters![index].data![0].fullName!,),
+                                // ChatMessageScreen(chaterName: cubit.chaters![index].data![0].fullName!,),
+                                ChatMessageScreen(chaterName: cubit.contacts![index].displayName,),
                           ),
                         );
                       },
@@ -86,11 +91,13 @@ class HomePageScreen extends StatelessWidget {
                         ),
                       ),
                       title: Text(
-                        cubit.chaters![index].data![0].fullName!,
+                        cubit.contacts![index].displayName!,
+                        // cubit.chaters![index].data![0].fullName!,
                         style: TextStyle(fontSize: 20),
                       ),
                       subtitle: Text(
-                        cubit.chaters![index].data![0].phoneNumber!,
+                        // cubit.chaters![index].data![0].phoneNumber!,
+                        cubit.contacts![index].displayName!,
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
