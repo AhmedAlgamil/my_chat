@@ -58,7 +58,7 @@ class HomePageScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => LoginScreen(),
                           ),
-                              (route) => false);
+                          (route) => false);
                     },
                     icon: const Icon(Icons.menu),
                     splashRadius: 20,
@@ -66,47 +66,109 @@ class HomePageScreen extends StatelessWidget {
                 ),
               ],
             ),
-            backgroundColor: thData.backgroundColor,
-            body: ListView.builder(
-              itemCount: cubit.contacts == null ? 0 : cubit.contacts!.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: <Widget>[
-                    ListTile(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                // ChatMessageScreen(chaterName: cubit.chaters![index].data![0].fullName!,),
-                                ChatMessageScreen(chaterName: cubit.contacts![index].displayName,),
-                          ),
-                        );
-                      },
-                      leading: CircleAvatar(
-                        child: Icon(
-                          Icons.person,
-                          size: 20,
-                          color: thData.accentColor,
-                        ),
-                      ),
-                      title: Text(
-                        cubit.contacts![index].displayName!,
-                        // cubit.chaters![index].data![0].fullName!,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      subtitle: Text(
-                        // cubit.chaters![index].data![0].phoneNumber!,
-                        cubit.contacts![index].displayName!,
-                        style: TextStyle(fontSize: 15),
-                      ),
+            backgroundColor: thData.colorScheme.background,
+            body: Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    child: Row(
+                      children: titles.map(
+                        (e) {
+                          return Ink(
+                            width: mq.size.width * 0.3,
+                            height: mq.size.height * 0.1,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: InkWell(
+                              onTap: () {},
+                              borderRadius: BorderRadius.circular(15),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: mq.size.height * 0.01,),
+                                  Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor:
+                                            thData.colorScheme.onSecondary,
+                                        child: Icon(
+                                          Icons.person,
+                                          color:
+                                              thData.colorScheme.background,
+                                        ),
+                                      ),
+                                      CircleAvatar(
+                                        backgroundColor: Colors.green,
+                                        radius: 5,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: mq.size.height * 0.01,
+                                  ),
+                                  Text(
+                                    e,
+                                    style: thData.textTheme.headlineSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList(),
                     ),
-                    Divider(
-                      height: 0,
-                    ), //                           <-- Divider
-                  ],
-                );
-              },
+                  ),
+                ),
+                // note 1: to add listview.builder inside column you must use expanded
+                Expanded(
+                  child: ListView.builder(
+                    // itemCount: cubit.contacts == null ? 0 : cubit.contacts!.length,
+                    itemCount: titles.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: <Widget>[
+                          ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      // ChatMessageScreen(chaterName: cubit.chaters![index].data![0].fullName!,),
+                                      ChatMessageScreen(
+                                    chaterName: titles[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            leading: CircleAvatar(
+                              backgroundColor: thData.colorScheme.onSecondary,
+                              child: Icon(
+                                Icons.person,
+                                color: thData.colorScheme.background,
+                              ),
+                            ),
+                            title: Text(
+                              titles[index],
+                              // cubit.chaters![index].data![0].fullName!,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            subtitle: Text(
+                              // cubit.chaters![index].data![0].phoneNumber!,
+                              titles[index],
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          Divider(
+                            height: 0,
+                          ), //                           <-- Divider
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           );
         },

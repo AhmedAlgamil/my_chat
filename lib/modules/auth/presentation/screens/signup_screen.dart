@@ -79,7 +79,9 @@ class SignUpScreen extends StatelessWidget {
                                             child: InkWell(
                                               borderRadius:
                                                   BorderRadius.circular(20),
-                                              onTap: () {},
+                                              onTap: () {
+                                                cubit.takePhoto();
+                                              },
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),

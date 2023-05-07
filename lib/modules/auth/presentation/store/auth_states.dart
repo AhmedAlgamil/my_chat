@@ -16,4 +16,5 @@ class UploadSuccess extends AuthStates{}
 class UploadFaild extends AuthStates{}
 
 class InitialSelectImage extends AuthStates{}
+class ImageSelectedState extends AuthStates{}
 class PickTime extends AuthStates{}

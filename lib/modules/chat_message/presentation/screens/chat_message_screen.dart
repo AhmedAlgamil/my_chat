@@ -5,6 +5,7 @@ import 'package:my_chat/modules/chat_message/data/models/message.dart';
 import '../components/chat_message.dart';
 import '../components/emojis_keyboard.dart';
 import '../components/reply_message_component.dart';
+import '../components/search_text.dart';
 import '../store/chat_message_cubit.dart';
 import '../store/chat_message_states.dart';
 
@@ -62,27 +63,27 @@ class ChatMessageScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
+                          backgroundColor: thData.colorScheme.onSecondary,
                           child: Icon(
                             Icons.person,
-                            color: thData.accentColor,
+                            color: thData.colorScheme.background,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: mq.size.width * 0.02,
-                      ),
                       Text(
                         chaterName!,
-                        style: thData.textTheme.headline4,
+                        style: thData.textTheme.titleSmall,
                       ),
                     ],
                   ),
                 ),
               ),
-              backgroundColor: thData.accentColor,
+              backgroundColor: thData.colorScheme.background,
               actions: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showSearch(context: context, delegate: SearchTextField());
+                    },
                     icon: const Icon(Icons.search),
                     splashRadius: 20),
                 Padding(
@@ -121,98 +122,104 @@ class ChatMessageScreen extends StatelessWidget {
 
                   EmojisKeyBoard(
                     emojiKeyboardController: messageController,
+                    onEmojiSelected: (category, emoji) {
+                      cubit.onTextChanged(emoji.toString());
+                    },
                     isEmojiOn: cubit.isEmojiOn,
+                    onBackspacePressed: ()
+                    {
+                      cubit.onTextChanged(messageController.text);
+                    },
                   ),
                   if (false)
                     ReplyMessageComponent(
                       userName: "userName",
                       message: "Message",
                     ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 7,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: thData.accentColor,
-                                borderRadius: BorderRadius.circular(40)),
-                            child: TextField(
-                              controller: messageController,
-                              style: thData.textTheme.headline4,
-                              minLines: 1,
-                              maxLines: 3,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(
-                                    width: 1,
-                                    color: thData.accentColor,
-                                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: thData.accentColor,
+                              borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextField(
+                            controller: messageController,
+                            style: thData.textTheme.headlineSmall,
+                            minLines: 1,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: thData.accentColor,
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(
-                                    width: 1,
-                                    color: thData.accentColor,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(
-                                    width: 1,
-                                    color: thData.accentColor,
-                                  ),
-                                ),
-                                prefixIcon: IconButton(
-                                  icon: Icon(Icons.emoji_emotions_outlined),
-                                  onPressed: () {
-                                    if (cubit.isEmojiOn) {
-                                      cubit.showEmoji(false);
-                                    } else {
-                                      cubit.showEmoji(true);
-                                    }
-                                  },
-                                  color: thData.primaryColorLight,
-                                  splashRadius: 20,
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.attach_file),
-                                  onPressed: () {},
-                                  color: thData.primaryColorLight,
-                                  splashRadius: 20,
-                                ),
-                                hintText: "Message",
-                                hintStyle: thData.textTheme.headline3,
                               ),
-                              onChanged: (value){
-                                cubit.onTextChanged(value);
-                              },
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: thData.accentColor,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: thData.accentColor,
+                                ),
+                              ),
+                              prefixIcon: IconButton(
+                                icon: Icon(Icons.emoji_emotions_outlined),
+                                onPressed: () {
+                                  if (cubit.isEmojiOn) {
+                                    cubit.showEmoji(false);
+                                  } else {
+                                    cubit.showEmoji(true);
+                                  }
+                                },
+                                color: thData.primaryColorLight,
+                                splashRadius: 20,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.attach_file),
+                                onPressed: () {},
+                                color: thData.primaryColorLight,
+                                splashRadius: 20,
+                              ),
+                              hintText: "Message",
+                              hintStyle: thData.textTheme.headlineSmall,
                             ),
+                            onChanged: (value){
+                              cubit.onTextChanged(value);
+                            },
                           ),
                         ),
-                        Expanded(
-                            flex: 1,
-                            child: FloatingActionButton(
-                              heroTag: 'record',
-                              onPressed: () {
-                                if(cubit.isRecordButton){
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: FloatingActionButton(
+                            heroTag: 'record',
+                            onPressed: () {
+                              if(cubit.isRecordButton){
 
-                                }
-                                else{
-                                  Message message = Message(id: "1",currentTime: DateTime.now().toString(),message: messageController.text,senderId: "2");
-                                  cubit.addMessage(message);
-                                  cubit.isRecordButton = true;
-                                  messageController.clear();
-                                }
-                              },
-                              mini: true,
-                              backgroundColor: thData.primaryColorLight,
-                              child:
-                              cubit.isRecordButton ? Icon(Icons.mic, color: thData.primaryColor) : Icon(Icons.send, color: thData.primaryColor),
-                            ))
-                      ],
-                    ),
+                              }
+                              else{
+                                Message message = Message(id: "1",currentTime: DateTime.now().toString(),message: messageController.text,senderId: "2");
+                                cubit.addMessage(message);
+                                cubit.isRecordButton = true;
+                                messageController.clear();
+                              }
+                            },
+                            mini: true,
+                            backgroundColor: thData.primaryColorLight,
+                            child:
+                            cubit.isRecordButton ? Icon(Icons.mic, color: thData.primaryColor) : Icon(Icons.send, color: thData.primaryColor),
+                          ))
+                    ],
                   ),
                 ],
               ),

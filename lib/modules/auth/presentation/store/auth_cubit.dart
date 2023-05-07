@@ -108,12 +108,12 @@ class AuthCubit extends Cubit<AuthStates> {
     try {
       emit(InitialSelectImage());
       final ImagePicker picker = ImagePicker();
-      final XFile? myImage = await picker.pickImage(
-        source: ImageSource.camera,
-      );
+      final XFile? myImage =
+          await picker.pickImage(source: ImageSource.camera);
       if (myImage == null) return;
       File imageFile = File(myImage.path);
       image = imageFile;
+      emit(ImageSelectedState());
     } on PlatformException catch (e) {
       print(e.message);
     }
