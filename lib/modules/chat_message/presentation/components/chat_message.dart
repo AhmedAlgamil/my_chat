@@ -10,7 +10,7 @@ class ChatMessageComponent extends StatelessWidget {
   String? myMessage, myTime,userName,repliedMessage;
   final Function()? makeReplyFunction;
   final Function(String val)? make;
-  final Function? callback;
+  Function? callback;
   bool isSender;
 
   @override
@@ -93,6 +93,7 @@ class ChatMessageComponent extends StatelessWidget {
                           });
                         } else if (itemSelected == "3") {
                           //code here
+                          callback?.call();
                         } else if (itemSelected == "4") {
                           //code here
 

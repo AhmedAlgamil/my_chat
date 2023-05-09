@@ -13,8 +13,8 @@ import '../components/custom_text_form_field.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  TextEditingController phoneController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   DateTime ondate = DateTime.now();
 
   @override
@@ -32,6 +32,8 @@ class LoginScreen extends StatelessWidget {
               MyChatSharedPrefrence.setBool("isLogedIn", true);
               MyChatSharedPrefrence.setString(
                   "myId", AuthCubit.get(context).authModel!.data![0].id);
+              MyChatSharedPrefrence.setString(
+                  "myImage", AuthCubit.get(context).authModel!.data![0].imageUrl);
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -85,6 +87,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       width: mq.size.width * 0.8,
+                      height: mq.size.height * 0.07,
                       hintText: S.of(context).phoneNumber,
                       myKeyboardType: TextInputType.phone,
                       myController: phoneController,
@@ -95,6 +98,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       width: mq.size.width * 0.8,
+                      height: mq.size.height * 0.07,
                       hintText: S.of(context).Password,
                       myController: passwordController,
                       errorText: cubit.errorPasswordValidator,

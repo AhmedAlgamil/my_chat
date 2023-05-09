@@ -21,6 +21,15 @@
   "enterPhone": "Please enter phone number",
   "enterFullName": "Please enter your full name",
   "offlineMode": "You are offline",
-  "Email": "Email"
+  "Email": "Email",
+  "Message": "Message",
+  "Document": "Document",
+  "Camera": "Camera",
+  "Gallery": "Gallery",
+  "contact": "contact",
+  "Sound": "Sound",
+  "Search": "Search",
+  "restPassword": "Rest Password"
+
 
 }

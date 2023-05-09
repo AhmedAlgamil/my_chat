@@ -5,6 +5,7 @@ import 'package:my_chat/shared/local/shared_prefrence.dart';
 import 'package:my_chat/shared/network/dio_helper.dart';
 
 import 'generated/l10n.dart';
+import 'modules/auth/presentation/screens/login_screen.dart';
 import 'modules/home_page/presentation/screens/home_page_screen.dart';
 
 void main() async {
@@ -13,7 +14,7 @@ void main() async {
   DioHelper.init();
   final bool? isLoginSuccess = MyChatSharedPrefrence.get("isLogedIn");
   runApp(DevicePreview(
-    enabled: true,
+    enabled: false,
     builder: (context) =>
         MyApp(
           isLoginSuccess: isLoginSuccess ?? false,
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'My Chat',
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
@@ -43,7 +44,6 @@ class MyApp extends StatelessWidget {
       // locale: locale,
       supportedLocales: S.delegate.supportedLocales,
       darkTheme: ThemeData(
-        errorColor: const Color(0xffFF7751),
         colorScheme: const ColorScheme(
           primary: Color(0xff2D343C),
           background: Color(0xff262B31),
@@ -71,7 +71,6 @@ class MyApp extends StatelessWidget {
         ),
         dialogBackgroundColor: const Color(0xff2D343C),
         accentColor: const Color(0xff2D343C),
-        backgroundColor: const Color(0xff262B31),
         buttonColor: const Color(0xffFF7751),
         cardColor: const Color(0xff2D343C),
         textTheme: const TextTheme(
@@ -112,11 +111,11 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
           ),
           headlineLarge:  TextStyle(
-            fontSize: 20,
+            fontSize: 25,
             color: Colors.white,
           ),
           headlineMedium:  TextStyle(
-            fontSize: 25,
+            fontSize: 20,
             color: Colors.white,
           ),
           titleMedium: TextStyle(
@@ -183,7 +182,12 @@ class MyApp extends StatelessWidget {
         backgroundColor: const Color(0xFFFAFAFA),
         buttonColor: const Color(0xffFF7751),
         cardColor: const Color(0xFFF5F5F5),
-        textTheme: const TextTheme(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFFFAFAFA),
+          selectedItemColor: Color(0xffFF7751),
+
+        ),
+        textTheme:  const TextTheme(
           titleSmall: TextStyle(
             fontSize: 15,
             color: Color(0xff262B31),
@@ -221,11 +225,11 @@ class MyApp extends StatelessWidget {
             color: Color(0xff262B31),
           ),
           headlineLarge:  TextStyle(
-            fontSize: 20,
+            fontSize: 25,
             color: Color(0xff262B31),
           ),
           headlineMedium:  TextStyle(
-            fontSize: 25,
+            fontSize: 20,
             color: Color(0xff262B31),
           ),
           titleMedium: TextStyle(
@@ -255,8 +259,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: HomePageScreen(),
-      // home: isLoginSuccess ? HomePageScreen() : LoginScreen(),
+      home: isLoginSuccess ? HomePageScreen() : LoginScreen(),
     );
   }
 }

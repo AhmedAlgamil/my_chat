@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_chat/modules/chat_message/data/models/message.dart';
 
+import '../../../../generated/l10n.dart';
+import '../../../../shared/local/shared_prefrence.dart';
 import '../components/chat_message.dart';
+import '../components/docs_panel.dart';
 import '../components/emojis_keyboard.dart';
 import '../components/reply_message_component.dart';
 import '../components/search_text.dart';
@@ -13,17 +16,22 @@ class ChatMessageScreen extends StatelessWidget {
   ChatMessageScreen({
     Key? key,
     this.chaterName,
+    this.profileName = "assets/images/blank_profile.jpg",
   }) : super(key: key);
 
   String? chaterName;
+  String profileName;
 
   TextEditingController messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     void makeReply() {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Replied")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Replied"),
+        ),
+      );
     }
 
     MediaQueryData mq = MediaQuery.of(context);
@@ -37,22 +45,22 @@ class ChatMessageScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           ChatMessageCubit cubit = ChatMessageCubit.get(context);
-          ScrollController _controller = new ScrollController();
+          ScrollController _controller = ScrollController();
 
           return Scaffold(
             floatingActionButton: false
                 ? Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 60.0, left: 30),
-                child: FloatingActionButton(
-                    heroTag: 'down',
-                    onPressed: () {},
-                    backgroundColor: Colors.blue,
-                    child: Icon(Icons.arrow_downward_rounded),
-                    mini: true),
-              ),
-            )
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 60.0, left: 30),
+                      child: FloatingActionButton(
+                          heroTag: 'down',
+                          onPressed: () {},
+                          backgroundColor: Colors.blue,
+                          child: Icon(Icons.arrow_downward_rounded),
+                          mini: true),
+                    ),
+                  )
                 : Container(),
             appBar: AppBar(
               title: Ink(
@@ -62,12 +70,18 @@ class ChatMessageScreen extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          backgroundColor: thData.colorScheme.onSecondary,
-                          child: Icon(
-                            Icons.person,
-                            color: thData.colorScheme.background,
+                        child: profileName == null ? CircleAvatar(
+                          backgroundImage: AssetImage(
+                            profileName,
                           ),
+                          backgroundColor:
+                          thData.colorScheme.onSecondary,
+                        ):CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            MyChatSharedPrefrence.get("myImage"),
+                          ),
+                          backgroundColor:
+                          thData.colorScheme.onSecondary,
                         ),
                       ),
                       Text(
@@ -112,6 +126,11 @@ class ChatMessageScreen extends StatelessWidget {
                             return Container(
                               child: ChatMessageComponent(
                                 myMessage: cubit.messages![index].message,
+                                callback: () {
+                                  cubit.showIsReply(true);
+                                  cubit.setReplyMessage(
+                                      cubit.messages![index].message, "ahmed");
+                                },
                               ),
                             );
                           },
@@ -119,22 +138,48 @@ class ChatMessageScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   EmojisKeyBoard(
                     emojiKeyboardController: messageController,
                     onEmojiSelected: (category, emoji) {
                       cubit.onTextChanged(emoji.toString());
                     },
                     isEmojiOn: cubit.isEmojiOn,
-                    onBackspacePressed: ()
-                    {
+                    onBackspacePressed: () {
                       cubit.onTextChanged(messageController.text);
                     },
                   ),
-                  if (false)
+                  if (cubit.isWillReply)
                     ReplyMessageComponent(
-                      userName: "userName",
-                      message: "Message",
+                      userName: cubit.userName,
+                      message: cubit.repliedMessage,
+                      isHaveClose: true,
+                      onPressedClose: () {
+                        cubit.showIsReply(false);
+                      },
+                    ),
+                  //to write more than one if else you can write like this
+                  // if ("dsfa".isEmpty) ...[
+                  //   Text("A is greater than 10"),
+                  //   Text("A is greater than 10"),
+                  //   Text("A is greater than 10"),
+                  //   Text("A is greater than 10"),
+                  //
+                  // ] else if ("dsfa".isEmpty) ...[
+                  //   Text("A is less than or Equal to 10")
+                  // ] else ...[
+                  //   Text("A is less than or Equal to 10")
+                  // ],
+                  if (cubit.isPanelShowen)
+                    DocumentsPanel(
+                      cameraOnPressed: () {
+                        cubit.takePhoto();
+                      },
+                      contactOnPressed: () {},
+                      galleryOnPressed: () {
+                        cubit.pickMultiImage();
+                      },
+                      documentOnPressed: () {},
+                      soundOnPressed: () {},
                     ),
                   Row(
                     children: [
@@ -142,8 +187,8 @@ class ChatMessageScreen extends StatelessWidget {
                         flex: 7,
                         child: Container(
                           decoration: BoxDecoration(
-                              color: thData.accentColor,
-                              borderRadius: BorderRadius.circular(20),
+                            color: thData.accentColor,
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           child: TextField(
                             controller: messageController,
@@ -179,6 +224,9 @@ class ChatMessageScreen extends StatelessWidget {
                                     cubit.showEmoji(false);
                                   } else {
                                     cubit.showEmoji(true);
+                                    if (cubit.isPanelShowen) {
+                                      cubit.showDocumentsPanel(false);
+                                    }
                                   }
                                 },
                                 color: thData.primaryColorLight,
@@ -186,14 +234,23 @@ class ChatMessageScreen extends StatelessWidget {
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.attach_file),
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (cubit.isPanelShowen) {
+                                    cubit.showDocumentsPanel(false);
+                                  } else {
+                                    cubit.showDocumentsPanel(true);
+                                    if (cubit.isEmojiOn) {
+                                      cubit.showEmoji(false);
+                                    }
+                                  }
+                                },
                                 color: thData.primaryColorLight,
                                 splashRadius: 20,
                               ),
-                              hintText: "Message",
+                              hintText: S.of(context).Message,
                               hintStyle: thData.textTheme.headlineSmall,
                             ),
-                            onChanged: (value){
+                            onChanged: (value) {
                               cubit.onTextChanged(value);
                             },
                           ),
@@ -204,11 +261,13 @@ class ChatMessageScreen extends StatelessWidget {
                           child: FloatingActionButton(
                             heroTag: 'record',
                             onPressed: () {
-                              if(cubit.isRecordButton){
-
-                              }
-                              else{
-                                Message message = Message(id: "1",currentTime: DateTime.now().toString(),message: messageController.text,senderId: "2");
+                              if (cubit.isRecordButton) {
+                              } else {
+                                Message message = Message(
+                                    id: "1",
+                                    currentTime: DateTime.now().toString(),
+                                    message: messageController.text,
+                                    senderId: "2");
                                 cubit.addMessage(message);
                                 cubit.isRecordButton = true;
                                 messageController.clear();
@@ -216,8 +275,9 @@ class ChatMessageScreen extends StatelessWidget {
                             },
                             mini: true,
                             backgroundColor: thData.primaryColorLight,
-                            child:
-                            cubit.isRecordButton ? Icon(Icons.mic, color: thData.primaryColor) : Icon(Icons.send, color: thData.primaryColor),
+                            child: cubit.isRecordButton
+                                ? Icon(Icons.mic, color: thData.primaryColor)
+                                : Icon(Icons.send, color: thData.primaryColor),
                           ))
                     ],
                   ),

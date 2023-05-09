@@ -68,7 +68,7 @@ class SignUpScreen extends StatelessWidget {
                                   return Container(
                                     height: mq.size.height * 0.15,
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 15),
+                                        horizontal: 25),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -97,7 +97,7 @@ class SignUpScreen extends StatelessWidget {
                                                     Text(
                                                       S.of(context).takePhoto,
                                                       style: thData
-                                                          .textTheme.headline3,
+                                                          .textTheme.displaySmall,
                                                     ),
                                                   ],
                                                 ),
@@ -129,7 +129,7 @@ class SignUpScreen extends StatelessWidget {
                                                     Text(
                                                       S.of(context).selectImage,
                                                       style: thData
-                                                          .textTheme.headline3,
+                                                          .textTheme.displaySmall,
                                                     ),
                                                   ],
                                                 ),
@@ -142,7 +142,8 @@ class SignUpScreen extends StatelessWidget {
                                   );
                                 });
                           },
-                          child: const Icon(Icons.image),
+                          backgroundColor: thData.accentColor,
+                          child: Icon(Icons.add,color: thData.primaryColorLight),
                         )
                       ],
                     ),
@@ -151,12 +152,13 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     Text(
                       S.of(context).createAccount,
-                      style: thData.textTheme.headline4,
+                      style: thData.textTheme.headlineLarge,
                     ),
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
+                      height: mq.size.height * 0.07,
                       hintText: S.of(context).fullName,
                       myController: fullNameController,
                       myKeyboardType: TextInputType.text,
@@ -165,23 +167,25 @@ class SignUpScreen extends StatelessWidget {
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
-                    InternationalPhoneNumberInput(
-                      textFieldController: phoneNumberController,
-                      hintText: S.of(context).phoneNumber,
-                      onInputChanged: (PhoneNumber value) {
-                        print(value.phoneNumber);
-                      },
-                    ),
-                    // CustomTextFormField(
-                    //   hintText: "Phone Number",
-                    //   myController: phoneNumberController,
-                    //   myKeyboardType: TextInputType.number,
-                    //   errorText: cubit.errorPhoneValidator,
+                    // InternationalPhoneNumberInput(
+                    //   textFieldController: phoneNumberController,
+                    //   hintText: S.of(context).phoneNumber,
+                    //   onInputChanged: (PhoneNumber value) {
+                    //     print(value.phoneNumber);
+                    //   },
                     // ),
+                    CustomTextFormField(
+                      hintText: "Phone Number",
+                      height: mq.size.height * 0.07,
+                      myController: phoneNumberController,
+                      myKeyboardType: TextInputType.number,
+                      errorText: cubit.errorPhoneValidator,
+                    ),
                     SizedBox(
                       height: mq.size.height * 0.04,
                     ),
                     CustomTextFormField(
+                      height: mq.size.height * 0.07,
                       hintText: S.of(context).Email,
                       myController: emailAddressController,
                       myKeyboardType: TextInputType.emailAddress,
@@ -192,6 +196,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     CustomTextFormField(
                       hintText: S.of(context).Password,
+                      height: mq.size.height * 0.07,
                       myController: passwordController,
                       myKeyboardType: TextInputType.visiblePassword,
                       errorText: cubit.errorPasswordValidator,

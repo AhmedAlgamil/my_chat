@@ -21,5 +21,13 @@
   "phoneValidation": "هذا الهاتف غير صحيح",
   "enterPhone": "من فضلك قم بإدخال الهاتف",
   "enterFullName": "من فضلك قم بإدخال اسمك",
-  "offlineMode": "لا يوجد انترنت"
+  "offlineMode": "لا يوجد انترنت",
+  "Message": "الرسالة",
+  "Document": "ملف",
+  "Camera": "الكاميرا",
+  "Gallery": "الاستوديو",
+  "contact": "جهة إتصال",
+  "Sound": "الصوت",
+  "Search": "بحث",
+  "restPassword": "كلمة مرور جديدة"
 }

@@ -21,6 +21,7 @@ class HomePageCubit extends Cubit<HomePageStates> {
 
   List<Contact>? contacts;
   List<Chaters>? chaters = [];
+  String imageUrl = "assets/images/blank_profile.jpg";
 
   AuthModel? authModel;
 
@@ -31,7 +32,7 @@ class HomePageCubit extends Cubit<HomePageStates> {
       // contacts = await ContactsService.getContacts();
       List<String> phones = ["01092788160","01098283826","01099978728","01277823947","01025626183"];
 
-      for(int i = 0;i < contacts!.length;i++)
+      for(int i = 0;i < phones!.length;i++)
         {
           homePageRepository?.getAllChaters(phoneNumber: phones[i]).then((value) {
             if(value!.data![0] == null){

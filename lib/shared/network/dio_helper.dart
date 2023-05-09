@@ -5,7 +5,7 @@ class DioHelper {
 
   static void init() {
     BaseOptions baseOptions = BaseOptions(
-      baseUrl: "http://192.168.1.13/myChat/",
+      baseUrl: "https://mychatinggemy.000webhostapp.com/",
       receiveDataWhenStatusError: true,
     );
     dio = Dio(baseOptions);
